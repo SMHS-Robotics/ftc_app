@@ -19,16 +19,16 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException
     {
-        rightWheel = hardwareMap.dcMotor.get("rightMotor");
-        leftWheel = hardwareMap.dcMotor.get("leftMotor");
-        rightClaw = hardwareMap.servo.get("rightClaw");
-        leftClaw = hardwareMap.servo.get("leftClaw");
+        rightWheel = hardwareMap.dcMotor.get("right_drive");
+        leftWheel = hardwareMap.dcMotor.get("left_drive");
+        //rightClaw = hardwareMap.servo.get("rightClaw");
+        //leftClaw = hardwareMap.servo.get("leftClaw");
 
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
 
-        leftClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.setDirection(Servo.Direction.REVERSE);
+        //leftClaw.setDirection(Servo.Direction.FORWARD);
+        //rightClaw.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
 
@@ -46,8 +46,10 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y;
-            rightPower = -gamepad1.right_stick_y;
+            leftPower  = gamepad1.left_stick_y;
+            rightPower = gamepad1.right_stick_y;
+
+
 
             // Send calculated power to wheels
             leftWheel.setPower(leftPower);
