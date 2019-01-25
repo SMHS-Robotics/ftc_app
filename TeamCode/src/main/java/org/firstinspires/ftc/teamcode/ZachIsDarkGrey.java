@@ -31,6 +31,8 @@ public class ZachIsDarkGrey extends LinearOpMode {
     Velocity speed;
 
     private double globalAngle, correction, power;
+    private boolean isStop = false;
+
 
     @Override
     public void runOpMode() {
@@ -48,80 +50,52 @@ public class ZachIsDarkGrey extends LinearOpMode {
         rightDrive = hardwareMap.dcMotor.get("right_drive");
         leftDrive = hardwareMap.dcMotor.get("left_drive");
 
+        power = 0.3;
+
         composeTelemetry();
 
         waitForStart();
-
+        leftDrive.setPower(power);
+        rightDrive.setPower(-power);
         while(opModeIsActive()){
-
+            telemetry.update();
+            while(!isStop) {
+                leftDrive.setPower(power);
+                rightDrive.setPower(-power);
+                if(gravity.xAccel < 0.1 && gravity.xAccel > -0.1) isStop = true;
+            }
         }
     }
 
-    void composeTelemetry() {
+    void composeTelemetry()
+    {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
+        telemetry.addAction(() ->
         {
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            speed = imu.getVelocity();
-            gravity  = imu.getGravity();
-        }
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity = imu.getGravity();
         });
 
         telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
-                    }
-                });
+                .addData("status", () -> imu.getSystemStatus().toShortString())
+                .addData("calib", () -> imu.getCalibrationStatus().toString());
 
         telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
 
         telemetry.addLine()
-                .addData("gravity", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
-
-        telemetry.addLine()
-                .addData("velocity", new Func<String>() {
-                    @Override public String value() {
-                        return speed.toString();
-                    }
-                });
+                .addData("grvty", () -> gravity.toString())
+                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f",
+                        Math.sqrt(gravity.xAccel * gravity.xAccel
+                                + gravity.yAccel * gravity.yAccel
+                                + gravity.zAccel * gravity.zAccel)));
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {

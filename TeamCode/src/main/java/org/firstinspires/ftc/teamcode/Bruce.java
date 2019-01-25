@@ -9,17 +9,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name = "ANOTHER FORM", group = "nextD")
-public class Bruce extends LinearOpMode{
-	
+public class Bruce extends LinearOpMode {
+
 
     private DcMotor leftWheel;
     private DcMotor rightWheel;
     private Servo leftClaw;
     private Servo rightClaw;
 
-@Override
-    public void runOpMode() throws InterruptedException
-    {
+    @Override
+    public void runOpMode() throws InterruptedException {
         rightWheel = hardwareMap.dcMotor.get("right_drive");
         leftWheel = hardwareMap.dcMotor.get("left_drive");
 
@@ -29,8 +28,8 @@ public class Bruce extends LinearOpMode{
         waitForStart();
 
         while (opModeIsActive()) {
-            double LeftPower = (gamepad1.left_bumper? 1.0 : 0) + ((gamepad1.left_trigger > 0.5) ? -1.0 : 0);
-            telemetry.addData("Say", LeftPower);
+            double LeftPower = (gamepad1.left_bumper ? 1.0 : 0) + ((gamepad1.left_trigger > 0.5) ? -1.0 : 0);
+            telemetry.addData("Say ", LeftPower);
             telemetry.update();
             double RightPower = (gamepad1.right_bumper ? 1.0 : 0) + ((gamepad1.right_trigger > 0.5) ? -1.0 : 0);
             // Send calculated power to wheels
