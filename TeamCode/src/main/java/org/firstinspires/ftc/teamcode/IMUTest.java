@@ -59,12 +59,14 @@ public class IMUTest extends LinearOpMode
     BNO055IMU imu;
 
     //Left and Right wheel DC Motors
-    private DcMotor leftDrive;
-    private DcMotor rightDrive;
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
 
     // State used for updating telemetry
     Orientation angles;
-    Acceleration gravity;
+    Acceleration accel;
+    Position location;
+    Velocity speed;
 
     //----------------------------------------------------------------------------------------------
     // Main logic
@@ -107,6 +109,11 @@ public class IMUTest extends LinearOpMode
         {
             telemetry.update();
 
+//            final double initAngle = angles.firstAngle;
+//            while (Math.abs(angles.firstAngle - initAngle) < 90)
+//            {
+//                leftDrive.setPower(1);
+//            }
         }
     }
 
@@ -124,25 +131,48 @@ public class IMUTest extends LinearOpMode
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity = imu.getGravity();
+            angles      = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            accel       = imu.getLinearAcceleration();
+            speed       = imu.getVelocity();
+            location    = imu.getPosition();
         });
 
         telemetry.addLine()
                 .addData("status", () -> imu.getSystemStatus().toShortString())
                 .addData("calib", () -> imu.getCalibrationStatus().toString());
 
+        //heading is firstAngle
         telemetry.addLine()
                 .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
                 .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
                 .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
 
         telemetry.addLine()
-                .addData("grvty", () -> gravity.toString())
-                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f",
-                            Math.sqrt(gravity.xAccel * gravity.xAccel
-                                    + gravity.yAccel * gravity.yAccel
-                                    + gravity.zAccel * gravity.zAccel)));
+                .addData("acc", () -> accel.toString())
+                .addData("xAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.xAccel))
+                .addData("yAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.yAccel))
+                .addData("zAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.zAccel));
+
+        telemetry.addLine()
+                .addData("vel", () -> speed.toString())
+                .addData("xVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.xVeloc))
+                .addData("yVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.yVeloc))
+                .addData("zVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.zVeloc));
+
+        telemetry.addLine()
+                .addData("pos", () -> speed.toString())
+                .addData("xPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.x))
+                .addData("yPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.y))
+                .addData("zPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.z));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -158,4 +188,5 @@ public class IMUTest extends LinearOpMode
     {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
+
 }
