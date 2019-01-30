@@ -63,18 +63,18 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        double left;
-        double right;
-        double max;
+        rightWheel = hardwareMap.dcMotor.get("right_drive");
+        leftWheel = hardwareMap.dcMotor.get("left_drive");
+        //rightClaw = hardwareMap.servo.get("rightClaw");
+        //leftClaw = hardwareMap.servo.get("leftClaw");
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "I AM A BAD ROBOT PUNISH ME");    //
-        telemetry.update();
+        //leftClaw.setDirection(Servo.Direction.FORWARD);
+        //rightClaw.setDirection(Servo.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -142,6 +142,10 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.update();
+            // Tank Mode uses one stick to control each wheel.
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            leftPower  = gamepad1.left_stick_y;
+            rightPower = gamepad1.right_stick_y;
 
             // Pace this loop so jaw action is reasonable speed.
             sleep(25);
