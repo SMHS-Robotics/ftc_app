@@ -62,7 +62,7 @@ public class ZachIsDarkGrey extends LinearOpMode {
             while(!isStop) {
                 leftDrive.setPower(power);
                 rightDrive.setPower(-power);
-                if(gravity.xAccel < 0.1 && gravity.xAccel > -0.1) isStop = true;
+                if(gravity.xAccel < 1 && gravity.xAccel > -1) isStop = true;
             }
         }
     }
