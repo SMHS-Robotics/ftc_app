@@ -25,13 +25,13 @@ import com.qualcomm.robotcore.util.Range;
 public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
 {
 
+    private final double CLAW_SPEED = 0.02;                     // sets rate to move servo
+    private final double CLAW_OPEN_MAX = -0.12;
+    private final double CLAW_OPEN_MIN = -0.5;
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot();    // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
-    double clawOffset = 0;                       // Servo mid position
-    final double CLAW_SPEED = 0.02;                   // sets rate to move servo
-    final double CLAW_OPEN_MAX = -0.12;
-    final double CLAW_OPEN_MIN = -0.5;
+    private double clawOffset = 0;                        // Servo mid position
 
     @Override
     public void runOpMode()
@@ -46,7 +46,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "I AM A BAD ROBOT PUNISH ME");    //
+        telemetry.addData("Say", "I AM A BAD ROBOT PUNISH ME FATHER");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -84,21 +84,21 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
             clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+            robot.leftClaw.setPosition(HardwarePushbot.MID_SERVO + clawOffset);
+            robot.rightClaw.setPosition(HardwarePushbot.MID_SERVO - clawOffset);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
             if (gamepad1.y)
             {
-                robot.leftArm.setPower(robot.ARM_UP_POWER);
+                robot.arm.setPower(HardwarePushbot.ARM_UP_POWER);
             }
             else if (gamepad1.a)
             {
-                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
+                robot.arm.setPower(HardwarePushbot.ARM_DOWN_POWER);
             }
             else
             {
-                robot.leftArm.setPower(0.0);
+                robot.arm.setPower(0.0);
             }
 
             if (clawOffset > CLAW_OPEN_MAX)
