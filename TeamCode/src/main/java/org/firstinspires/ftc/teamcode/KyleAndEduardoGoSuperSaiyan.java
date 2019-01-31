@@ -29,6 +29,7 @@
  */
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -37,28 +38,28 @@ import com.qualcomm.robotcore.util.Range;
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * This particular OpMode executes a POV Game style Teleop for a PushBot
  * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="kyle copy pasted", group="Pushbot")
+@TeleOp(name = "kyle copy pasted", group = "Pushbot")
 
 public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
 {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
-    double          clawOffset      = 0;                       // Servo mid position
-    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
-    final double    CLAW_OPEN_MAX   = -0.12;
-    final double    CLAW_OPEN_MIN   = -0.5;
+    double clawOffset = 0;                       // Servo mid position
+    final double CLAW_SPEED = 0.02;                   // sets rate to move servo
+    final double CLAW_OPEN_MAX = -0.12;
+    final double CLAW_OPEN_MIN = -0.5;
 
     @Override
     public void runOpMode()
@@ -83,7 +84,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
         while (opModeIsActive())
         {
             // Combine drive and turn for blended motion.
-            left  = -gamepad1.left_stick_y;
+            left = -gamepad1.left_stick_y;
             right = -gamepad1.right_stick_y;
 
             // Normalize the values so neither exceed +/- 1.0
@@ -138,8 +139,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             }
 
             // Send telemetry message to signify robot running;
-            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-            telemetry.addData("left",  "%.2f", left);
+            telemetry.addData("claw", "Offset = %.2f", clawOffset);
+            telemetry.addData("left", "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.update();
 
