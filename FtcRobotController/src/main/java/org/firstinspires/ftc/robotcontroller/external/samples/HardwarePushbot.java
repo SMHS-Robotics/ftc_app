@@ -112,6 +112,7 @@ public class HardwarePushbot
 
         //Initialize all sensors
         imu = hwMap.get(BNO055IMU.class, "imu");
+        distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
         //TODO: initialize color and distance sensors
     }
 }
