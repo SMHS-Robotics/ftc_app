@@ -6,10 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
@@ -27,6 +30,9 @@ public class IMUTestCalibration extends LinearOpMode
 
     // State used for updating telemetry
     Orientation angles;
+    Acceleration accel;
+    Velocity speed;
+    Position location;
 
     //----------------------------------------------------------------------------------------------
     // Main logic
@@ -102,26 +108,53 @@ public class IMUTestCalibration extends LinearOpMode
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable()
+        telemetry.addAction(() ->
         {
-            @Override
-            public void run()
-            {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            }
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles      = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            accel       = imu.getLinearAcceleration();
+            speed       = imu.getVelocity();
+            location    = imu.getPosition();
         });
 
         telemetry.addLine()
-                .addData("status", () -> imu.getSystemStatus().toString())
+                .addData("status", () -> imu.getSystemStatus().toShortString())
                 .addData("calib", () -> imu.getCalibrationStatus().toString());
 
+        //heading is firstAngle
         telemetry.addLine()
                 .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
                 .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
                 .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
+
+        telemetry.addLine()
+                .addData("acc", () -> accel.toString())
+                .addData("xAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.xAccel))
+                .addData("yAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.yAccel))
+                .addData("zAccel", () -> String.format(Locale.getDefault(),
+                        "%.3f", accel.zAccel));
+
+        telemetry.addLine()
+                .addData("vel", () -> speed.toString())
+                .addData("xVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.xVeloc))
+                .addData("yVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.yVeloc))
+                .addData("zVel", () -> String.format(Locale.getDefault(),
+                        "%.3f", speed.zVeloc));
+
+        telemetry.addLine()
+                .addData("pos", () -> speed.toString())
+                .addData("xPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.x))
+                .addData("yPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.y))
+                .addData("zPos", () -> String.format(Locale.getDefault(),
+                        "%.3f", location.z));
     }
 
     //----------------------------------------------------------------------------------------------
