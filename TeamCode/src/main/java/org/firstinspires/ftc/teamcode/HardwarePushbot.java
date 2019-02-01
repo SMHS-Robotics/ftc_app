@@ -113,10 +113,18 @@ public class HardwarePushbot
 
     public double getAngle()
     {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
-        return 0;
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
 
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
     }
 
     private void resetAngle()
