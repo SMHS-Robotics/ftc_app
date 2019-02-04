@@ -35,6 +35,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         robot.resetAngle();
         double leftPower, rightPower;
 
+        //set the initial power of the motors depending on rotation
         if(degrees < 0){
             leftPower = -power;
             rightPower = power;
@@ -46,6 +47,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         robot.leftDrive.setPower(leftPower);
         robot.rightDrive.setPower(rightPower);
 
+        //rotate within 3 degrees of error before stopping, and adjust as necessary
         while (robot.getAngle() > degrees + 3 && robot.getAngle() < degrees - 3) {
             if(robot.getAngle() > degrees + 3 && leftPower > 0){
                 leftPower = -power;
@@ -61,6 +63,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
             }
         }
 
+        //stop the robot
         robot.leftDrive.setPower(0);
         robot.rightDrive.setPower(0);
         sleep(1000);
