@@ -127,7 +127,7 @@ public class HardwarePushbot
         return globalAngle;
     }
 
-    private void resetAngle()
+    public void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
