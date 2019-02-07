@@ -60,12 +60,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             right = -gamepad1.right_stick_y;
 
             // Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
-            }
+            left = Range.clip(left, -1, 1);
+            right = Range.clip(right, -1, 1);
 
             // Output the safe vales to the motor drives.
             robot.leftDrive.setPower(left);
