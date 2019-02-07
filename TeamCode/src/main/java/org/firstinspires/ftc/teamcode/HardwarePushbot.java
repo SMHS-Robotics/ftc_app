@@ -75,13 +75,10 @@ public class HardwarePushbot
     public BNO055IMU imu = null;
     /* local OpMode members. */
     HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
-
-
     Orientation lastAngles = new Orientation();
     double globalAngle = 0;
-
     Orientation angles;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public HardwarePushbot()
@@ -142,9 +139,13 @@ public class HardwarePushbot
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
         if (deltaAngle < -180)
+        {
             deltaAngle += 360;
+        }
         else if (deltaAngle > 180)
+        {
             deltaAngle -= 360;
+        }
 
         globalAngle += deltaAngle;
 

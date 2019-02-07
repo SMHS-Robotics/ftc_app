@@ -2,6 +2,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
+
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
@@ -42,8 +46,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "I AM A BAD ROBOT PUNISH ME FATHER");
-        telemetry.update();
+        //telemetry.addData("Say", "I AM A BAD ROBOT PUNISH ME FATHER");
+        //telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -51,13 +55,9 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            // Combine drive and turn for blended motion.
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
-
             // Normalize the values so neither exceed +/- 1.0
-            left = Range.clip(left, -1, 1);
-            right = Range.clip(right, -1, 1);
+            left = Range.clip(-gamepad1.left_stick_y, -1, 1);
+            right = Range.clip(-gamepad1.right_stick_y, -1, 1);
 
             // Output the safe vales to the motor drives.
             robot.leftDrive.setPower(left);
@@ -93,14 +93,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
                 robot.arm.setPower(0.0);
             }
 
-            if (clawOffset > CLAW_OPEN_MAX)
-            {
-                clawOffset = CLAW_OPEN_MAX;
-            }
-            if (clawOffset < CLAW_OPEN_MIN)
-            {
-                clawOffset = CLAW_OPEN_MIN;
-            }
+            clawOffset = Range.clip(clawOffset, CLAW_OPEN_MIN, CLAW_OPEN_MAX);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw", "Offset = %.2f", clawOffset);
