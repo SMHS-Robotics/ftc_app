@@ -33,10 +33,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -47,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
-@Autonomous(name = "Sensor: BNO055 IMU", group = "Sensor")
+@Autonomous(name = "Ryan-kun Uwu", group = "Sensor")
 // Comment this out to add to the opmode list
 public class IMUTest extends LinearOpMode
 {
@@ -57,16 +55,14 @@ public class IMUTest extends LinearOpMode
 
     // The IMU sensor object
     BNO055IMU imu;
-
-    //Left and Right wheel DC Motors
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
-
     // State used for updating telemetry
     Orientation angles;
     Acceleration accel;
     Position location;
     Velocity speed;
+    //Left and Right wheel DC Motors
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
 
     //----------------------------------------------------------------------------------------------
     // Main logic
@@ -131,10 +127,10 @@ public class IMUTest extends LinearOpMode
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
-            angles      = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            accel       = imu.getLinearAcceleration();
-            speed       = imu.getVelocity();
-            location    = imu.getPosition();
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            accel = imu.getLinearAcceleration();
+            speed = imu.getVelocity();
+            location = imu.getPosition();
         });
 
         telemetry.addLine()
