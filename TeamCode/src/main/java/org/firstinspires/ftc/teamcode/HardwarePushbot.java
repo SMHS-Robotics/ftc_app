@@ -50,7 +50,7 @@ public class HardwarePushbot
     private ElapsedTime period = new ElapsedTime();
 
     //Parameters for REV Expansion Hub
-    Orientation angles;
+
     Orientation lastAngles = new Orientation();
     double globalAngle = 0;
     Acceleration accel;
@@ -113,6 +113,8 @@ public class HardwarePushbot
 
     public double getAngle()
     {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
         if (deltaAngle < -180)
