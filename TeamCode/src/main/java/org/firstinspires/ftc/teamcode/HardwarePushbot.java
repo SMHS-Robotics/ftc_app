@@ -42,6 +42,7 @@ public class HardwarePushbot
     public DcMotor arm = null;
     public Servo leftClaw = null;
     public Servo rightClaw = null;
+    public Servo flagDrop = null;
     public DistanceSensor distanceSensor = null;
     public ColorSensor colorSensor = null;
     public BNO055IMU imu = null;
@@ -66,6 +67,7 @@ public class HardwarePushbot
     {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
 
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
@@ -102,6 +104,9 @@ public class HardwarePushbot
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
 
+        flagDrop = hwMap.get(Servo.class, "flag_dropper");
+        flagDrop.setPosition(0);
+
         //TODO: Initialize sensors
         distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
@@ -118,9 +123,13 @@ public class HardwarePushbot
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
         if (deltaAngle < -180)
+        {
             deltaAngle += 360;
+        }
         else if (deltaAngle > 180)
+        {
             deltaAngle -= 360;
+        }
 
         globalAngle += deltaAngle;
 
@@ -135,5 +144,6 @@ public class HardwarePushbot
 
         globalAngle = 0;
     }
+
 
 }

@@ -19,6 +19,9 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
     AutonomousState state;
     Orientation angles;
 
+    final double TURN_TOLERANCE = 10;
+    final double TURN_POWER = 0.15;
+
     @Override
     public void runOpMode() throws InterruptedException
     {
@@ -32,6 +35,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
             switch (state)
             {
                 case TO_WALL:
+                    rotate(91,TURN_POWER);
                     autonomousToWall();
                     break;
                 case TO_DEPOT:
@@ -71,7 +75,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
     private void autonomousToWall()
     {
-
+        state = AutonomousState.TO_DEPOT;
     }
 
     private void autonomousToDepot()
@@ -81,7 +85,11 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
     private void autonomousDropMarker()
     {
-
+        rotate(180, 0.1);
+        robot.flagDrop.setPosition(0.6);
+        sleep(1000);
+        robot.flagDrop.setPosition((0));
+        state = AutonomousState.TO_CRATER;
     }
 
     private void autonomousToCrater()
@@ -106,31 +114,43 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         double leftPower, rightPower;
 
         //set the initial power of the motors depending on rotation
-        if(degrees < 0){
-            leftPower = -power;
-            rightPower = power;
-        }else if(degrees > 0){
+        if (degrees < 0)
+        {
             leftPower = power;
             rightPower = -power;
-        } else return;
+        }
+        else if (degrees > 0)
+        {
+            leftPower = -power;
+            rightPower = power;
+        }
+        else
+        {
+            return;
+        }
 
         robot.leftDrive.setPower(leftPower);
         robot.rightDrive.setPower(rightPower);
 
         //rotate within 3 degrees of error before stopping, and adjust as necessary
-        while (robot.getAngle() > degrees + 3 && robot.getAngle() < degrees - 3) {
-            if(robot.getAngle() > degrees + 3 && leftPower > 0){
-                leftPower = -power;
-                rightPower = power;
-                robot.leftDrive.setPower(leftPower);
-                robot.rightDrive.setPower(rightPower);
-            }
-            if(robot.getAngle() < degrees - 3 && leftPower < 0){
+        while (Math.abs(robot.getAngle() - degrees) > TURN_TOLERANCE)
+        {
+            telemetry.addLine().addData("Angle: ", robot.getAngle());
+            if (robot.getAngle() > degrees + TURN_TOLERANCE && leftPower < 0)
+            {
                 leftPower = power;
                 rightPower = -power;
                 robot.leftDrive.setPower(leftPower);
                 robot.rightDrive.setPower(rightPower);
             }
+            if (robot.getAngle() < degrees - TURN_TOLERANCE && leftPower > 0)
+            {
+                leftPower = -power;
+                rightPower = power;
+                robot.leftDrive.setPower(leftPower);
+                robot.rightDrive.setPower(rightPower);
+            }
+            telemetry.update();
         }
 
         //stop the robot
@@ -139,6 +159,22 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         sleep(1000);
 
         robot.resetAngle();
+    }
+
+    private void driveUntilDistance(double distance, DistanceUnit unit, double power)
+    {
+        power = Range.clip(power, -1, 1);
+        robot.leftDrive.setPower(power);
+        robot.rightDrive.setPower(power);
+
+        while (robot.distanceSensor.getDistance(unit) > distance)
+        {
+            sleep(1000);
+        }
+
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
+
     }
 
     /*
