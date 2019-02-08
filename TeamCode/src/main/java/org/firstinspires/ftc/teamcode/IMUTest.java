@@ -34,11 +34,13 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -64,6 +66,8 @@ public class IMUTest extends LinearOpMode
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
+    DistanceSensor distanceSensor = null;
+
     //----------------------------------------------------------------------------------------------
     // Main logic
     //----------------------------------------------------------------------------------------------
@@ -82,6 +86,8 @@ public class IMUTest extends LinearOpMode
         parameters.loggingEnabled = true;
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         //Retrieve and initialize left and right motors
 
@@ -169,6 +175,11 @@ public class IMUTest extends LinearOpMode
                         "%.3f", location.y))
                 .addData("zPos", () -> String.format(Locale.getDefault(),
                         "%.3f", location.z));
+
+
+        telemetry.addLine()
+                .addData("dist", () -> String.format(Locale.US, "%.02f",
+                        distanceSensor.getDistance(DistanceUnit.CM)));
     }
 
     //----------------------------------------------------------------------------------------------
