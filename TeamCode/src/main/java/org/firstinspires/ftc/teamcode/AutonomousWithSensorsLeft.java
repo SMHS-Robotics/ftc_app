@@ -22,7 +22,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
     Orientation angles;
 
     @Override
-    public void runOpMode() throws InterruptedException
+    public void runOpMode () throws InterruptedException
     {
         autonomousStart();
 
@@ -60,7 +60,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         }
     }
 
-    private void composeTelemetry()
+    private void composeTelemetry ()
     {
 
         // At the beginning of each telemetry update, grab a bunch of data
@@ -70,44 +70,36 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
-            angles = robot.imu.getAngularOrientation(
-                    AxesReference.INTRINSIC, AxesOrder.ZYX,
-                    AngleUnit.DEGREES);
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         });
 
-        telemetry.addLine()
-                .addData("status", () -> robot.imu.getSystemStatus().toShortString())
-                .addData("calib", () -> robot.imu.getCalibrationStatus().toString());
+        telemetry.addLine().addData("status", () -> robot.imu.getSystemStatus().toShortString()).addData("calib", () -> robot.imu.getCalibrationStatus().toString());
 
         //heading is firstAngle
-        telemetry.addLine()
-                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
-                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
-                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
+        telemetry.addLine().addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle)).addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle)).addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
 
-        telemetry.addLine()
-                .addData("dist", () -> String.format(Locale.US, "%.02f",
-                        robot.distanceSensor.getDistance(DistanceUnit.CM)));
+        telemetry.addLine().addData("dist", () -> String.format(Locale.US, "%.02f", robot.distanceSensor.getDistance(DistanceUnit.CM)));
     }
 
-    private void autonomousStart()
+    private void autonomousStart ()
     {
         robot.init(hardwareMap);
     }
 
-    private void autonomousToWall()
+    private void autonomousToWall ()
     {
         driveUntilDistance(10, DistanceUnit.CM, 1);
     }
 
-    private void driveUntilDistance(double distance, DistanceUnit unit, double power)
+    private void driveUntilDistance (double distance, DistanceUnit unit, double power)
     {
         power = Range.clip(power, -1, 1);
         robot.leftDrive.setPower(power);
         robot.rightDrive.setPower(power);
 
-        while (robot.distanceSensor.getDistance(unit) > distance)
+        while (robot.distanceSensor.getDistance(unit) > distance || robot.distanceSensor.getDistance(unit) == DistanceUnit.infinity)
         {
+
             sleep(1000);
         }
 
@@ -116,7 +108,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
     }
 
-    private void autonomousToDepot()
+    private void autonomousToDepot ()
     {
         //turn towards depot
         rotate(90, 1);
@@ -126,27 +118,27 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
     }
 
-    private void autonomousDropMarker()
+    private void autonomousDropMarker ()
     {
 
     }
 
-    private void autonomousToCrater()
+    private void autonomousToCrater ()
     {
 
     }
 
-    String formatAngle(AngleUnit angleUnit, double angle)
+    String formatAngle (AngleUnit angleUnit, double angle)
     {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees)
+    String formatDegrees (double degrees)
     {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-    private void rotate(int degrees, double power)
+    private void rotate (int degrees, double power)
     {
         power = Range.clip(power, 0, 1);
         robot.resetAngle();

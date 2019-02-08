@@ -46,8 +46,7 @@ public class HardwarePushbot
     public DistanceSensor distanceSensor = null;
     public ColorSensor colorSensor = null;
     public BNO055IMU imu = null;
-    /* local OpMode members. */
-    HardwareMap hwMap = null;
+    /* local OpMode members. */ HardwareMap hwMap = null;
     Orientation lastAngles = new Orientation();
 
     //Parameters for REV Expansion Hub
@@ -56,13 +55,13 @@ public class HardwarePushbot
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot()
+    public HardwarePushbot ()
     {
 
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap)
+    public void init (HardwareMap ahwMap)
     {
         // Save reference to Hardware map
         hwMap = ahwMap;
@@ -106,7 +105,7 @@ public class HardwarePushbot
         flagDrop = hwMap.get(Servo.class, "flag_dropper");
         flagDrop.setPosition(0);
 
-        //TODO: Initialize sensors
+        //TODO: Touch sensor maybe??
         distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
 
@@ -115,7 +114,7 @@ public class HardwarePushbot
 
     }
 
-    public double getAngle()
+    public double getAngle ()
     {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -137,7 +136,7 @@ public class HardwarePushbot
         return globalAngle;
     }
 
-    public void resetAngle()
+    public void resetAngle ()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
