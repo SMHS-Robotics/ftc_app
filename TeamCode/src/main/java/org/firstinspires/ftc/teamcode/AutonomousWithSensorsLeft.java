@@ -15,12 +15,11 @@ import java.util.Locale;
 @Autonomous(name = "LEFT SIDE", group = "asdofijefj")
 public class AutonomousWithSensorsLeft extends LinearOpMode
 {
+    final double TURN_TOLERANCE = 10;
+    final double TURN_POWER = 0.15;
     HardwarePushbot robot = new HardwarePushbot();
     AutonomousState state;
     Orientation angles;
-
-    final double TURN_TOLERANCE = 10;
-    final double TURN_POWER = 0.15;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -30,12 +29,16 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
         waitForStart();
         state = AutonomousState.TO_WALL;
 
+        composeTelemetry();
+
         while (opModeIsActive())
         {
+            /*
+            Controls the current stage of the autonomous program based on an enum
+             */
             switch (state)
             {
                 case TO_WALL:
-                    rotate(91,TURN_POWER);
                     autonomousToWall();
                     break;
                 case TO_DEPOT:
@@ -53,19 +56,38 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
                     throw new InterruptedException("invalid state");
             }
 
-            telemetry.addAction(() -> angles = robot.imu.getAngularOrientation(
-                    AxesReference.INTRINSIC,
-                    AxesOrder.ZYX,
-                    AngleUnit.DEGREES));
-
-            telemetry.addLine()
-                    .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
-                    .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
-                    .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
-
-            telemetry.addLine()
-                    .addData("distance", () -> robot.distanceSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
         }
+    }
+
+    private void composeTelemetry()
+    {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(() ->
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles = robot.imu.getAngularOrientation(
+                    AxesReference.INTRINSIC, AxesOrder.ZYX,
+                    AngleUnit.DEGREES);
+        });
+
+        telemetry.addLine()
+                .addData("status", () -> robot.imu.getSystemStatus().toShortString())
+                .addData("calib", () -> robot.imu.getCalibrationStatus().toString());
+
+        //heading is firstAngle
+        telemetry.addLine()
+                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
+
+        telemetry.addLine()
+                .addData("dist", () -> String.format(Locale.US, "%.02f",
+                        robot.distanceSensor.getDistance(DistanceUnit.CM)));
     }
 
     private void autonomousStart()
@@ -75,26 +97,34 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
     private void autonomousToWall()
     {
+        driveUntilDistance(10, DistanceUnit.CM, 1);
         state = AutonomousState.TO_DEPOT;
     }
 
     private void autonomousToDepot()
     {
+        //turn towards depot
+        rotate(90, TURN_POWER);
+
+        //go forward until hit wall
+        driveUntilDistance(10, DistanceUnit.CM, 1);
+        state = AutonomousState.DROP_MARKER;
 
     }
 
     private void autonomousDropMarker()
     {
         rotate(180, 0.1);
-        robot.flagDrop.setPosition(0.6);
+        robot.flagDrop.setPosition(0);
         sleep(1000);
-        robot.flagDrop.setPosition((0));
+        robot.flagDrop.setPosition(1);
         state = AutonomousState.TO_CRATER;
     }
 
     private void autonomousToCrater()
     {
-
+        driveUntilDistance(20, DistanceUnit.CM, 1);
+        state = AutonomousState.END;
     }
 
     String formatAngle(AngleUnit angleUnit, double angle)
@@ -160,6 +190,7 @@ public class AutonomousWithSensorsLeft extends LinearOpMode
 
         robot.resetAngle();
     }
+
 
     private void driveUntilDistance(double distance, DistanceUnit unit, double power)
     {
