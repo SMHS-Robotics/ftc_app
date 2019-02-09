@@ -28,7 +28,7 @@ public class PIDController
      * @param Ki the integral coefficient
      * @param Kd the derivative coefficient
      */
-    public PIDController (double Kp, double Ki, double Kd)
+    public PIDController(double Kp, double Ki, double Kd)
     {
         m_P = Kp;
         m_I = Ki;
@@ -40,7 +40,7 @@ public class PIDController
      * This should only be called by the PIDTask
      * and is created during initialization.
      */
-    private void calculate ()
+    private void calculate()
     {
         int sign = 1;
 
@@ -69,7 +69,8 @@ public class PIDController
             // Integrate the errors as long as the upcoming integrator does
             // not exceed the minimum and maximum output thresholds.
 
-            if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) && (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
+            if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) &&
+                (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
             {
                 m_totalError += m_error;
             }
@@ -106,7 +107,7 @@ public class PIDController
      * @param i Integral coefficient
      * @param d Differential coefficient
      */
-    public void setPID (double p, double i, double d)
+    public void setPID(double p, double i, double d)
     {
         m_P = p;
         m_I = i;
@@ -118,7 +119,7 @@ public class PIDController
      *
      * @return proportional coefficient
      */
-    public double getP ()
+    public double getP()
     {
         return m_P;
     }
@@ -128,7 +129,7 @@ public class PIDController
      *
      * @return integral coefficient
      */
-    public double getI ()
+    public double getI()
     {
         return m_I;
     }
@@ -138,7 +139,7 @@ public class PIDController
      *
      * @return differential coefficient
      */
-    public double getD ()
+    public double getD()
     {
         return m_D;
     }
@@ -149,7 +150,7 @@ public class PIDController
      *
      * @return the latest calculated output
      */
-    public double performPID ()
+    public double performPID()
     {
         calculate();
         return m_result;
@@ -162,7 +163,7 @@ public class PIDController
      *              This is always centered on zero and constrained the the max and min outs
      * @return the latest calculated output
      */
-    public double performPID (double input)
+    public double performPID(double input)
     {
         setInput(input);
         return performPID();
@@ -176,7 +177,7 @@ public class PIDController
      *
      * @param continuous Set to true turns on continuous, false turns off continuous
      */
-    public void setContinuous (boolean continuous)
+    public void setContinuous(boolean continuous)
     {
         m_continuous = continuous;
     }
@@ -187,7 +188,7 @@ public class PIDController
      * be the same point and automatically calculates the shortest route to
      * the setpoint.
      */
-    public void setContinuous ()
+    public void setContinuous()
     {
         this.setContinuous(true);
     }
@@ -198,7 +199,7 @@ public class PIDController
      * @param minimumInput the minimum value expected from the input, always positive
      * @param maximumInput the maximum value expected from the output, always positive
      */
-    public void setInputRange (double minimumInput, double maximumInput)
+    public void setInputRange(double minimumInput, double maximumInput)
     {
         m_minimumInput = Math.abs(minimumInput);
         m_maximumInput = Math.abs(maximumInput);
@@ -211,7 +212,7 @@ public class PIDController
      * @param minimumOutput the minimum value to write to the output, always positive
      * @param maximumOutput the maximum value to write to the output, always positive
      */
-    public void setOutputRange (double minimumOutput, double maximumOutput)
+    public void setOutputRange(double minimumOutput, double maximumOutput)
     {
         m_minimumOutput = Math.abs(minimumOutput);
         m_maximumOutput = Math.abs(maximumOutput);
@@ -222,7 +223,7 @@ public class PIDController
      *
      * @return the current setpoint
      */
-    public double getSetpoint ()
+    public double getSetpoint()
     {
         return m_setpoint;
     }
@@ -232,7 +233,7 @@ public class PIDController
      *
      * @param setpoint the desired setpoint
      */
-    public void setSetpoint (double setpoint)
+    public void setSetpoint(double setpoint)
     {
         int sign = 1;
 
@@ -267,7 +268,7 @@ public class PIDController
      *
      * @return the current error
      */
-    public synchronized double getError ()
+    public synchronized double getError()
     {
         return m_error;
     }
@@ -278,7 +279,7 @@ public class PIDController
      *
      * @param percent error which is tolerable
      */
-    public void setTolerance (double percent)
+    public void setTolerance(double percent)
     {
         m_tolerance = percent;
     }
@@ -290,15 +291,16 @@ public class PIDController
      *
      * @return true if the error is less than the tolerance
      */
-    public boolean onTarget ()
+    public boolean onTarget()
     {
-        return (Math.abs(m_error) < Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
+        return (Math.abs(m_error) <
+                Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
     }
 
     /**
      * Begin running the PIDController
      */
-    public void enable ()
+    public void enable()
     {
         m_enabled = true;
     }
@@ -306,7 +308,7 @@ public class PIDController
     /**
      * Stop running the PIDController.
      */
-    public void disable ()
+    public void disable()
     {
         m_enabled = false;
     }
@@ -314,7 +316,7 @@ public class PIDController
     /**
      * Reset the previous error,, the integral term, and disable the controller.
      */
-    public void reset ()
+    public void reset()
     {
         disable();
         m_prevError = 0;
@@ -327,7 +329,7 @@ public class PIDController
      *
      * @param input Input value to the PID calculation.
      */
-    public void setInput (double input)
+    public void setInput(double input)
     {
         int sign = 1;
 

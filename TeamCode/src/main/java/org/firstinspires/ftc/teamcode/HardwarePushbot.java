@@ -55,13 +55,13 @@ public class HardwarePushbot
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot ()
+    public HardwarePushbot()
     {
 
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init (HardwareMap ahwMap)
+    public void init(HardwareMap ahwMap)
     {
         // Save reference to Hardware map
         hwMap = ahwMap;
@@ -71,13 +71,16 @@ public class HardwarePushbot
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         arm = hwMap.get(DcMotor.class, "arm");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Set to REVERSE if using AndyMark motors
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        // Set to FORWARD if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "IMUTestCalibration.json"; // see the calibration sample opmode
+        parameters.calibrationDataFile
+                = "IMUTestCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled = true;
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -114,9 +117,10 @@ public class HardwarePushbot
 
     }
 
-    public double getAngle ()
+    public double getAngle()
     {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu
+                .getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -136,9 +140,10 @@ public class HardwarePushbot
         return globalAngle;
     }
 
-    public void resetAngle ()
+    public void resetAngle()
     {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = imu
+                .getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }

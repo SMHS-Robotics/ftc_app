@@ -12,16 +12,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
 
-@Autonomous(name = "LEFT SIDE", group = "asdofijefj")
+@Autonomous(name = "RIGHT SID", group = "asdofijefj")
 
-public class AutonomousWithSensorsLeft extends LinearOpMode
+public class AutonomousWithSensorsRight extends LinearOpMode
 {
     final double TURN_TOLERANCE = 10;
     final double TURN_POWER = 1.0;
     final double DRIVE_POWER = 1.0;
 
-    final double ANGLE_TO_DEPOT = 78.3469043;
-    final double ANGLE_TO_CRATER = 170.2361801;
+    final double ANGLE_TO_DEPOT = -58.3469043;
+    final double ANGLE_TO_CRATER = -190.2361801;
 
     HardwarePushbot robot = new HardwarePushbot();
     AutonomousState state;

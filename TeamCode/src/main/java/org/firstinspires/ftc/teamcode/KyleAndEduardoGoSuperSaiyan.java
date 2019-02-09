@@ -28,17 +28,15 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
     private final double CLAW_SPEED = 0.02;                     // sets rate to move servo
     private final double CLAW_OPEN_MAX = -0.12;
     private final double CLAW_OPEN_MIN = -0.5;
-    /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();    // Use a Pushbot's hardware
+    /* Declare OpMode members. */ HardwarePushbot robot = new HardwarePushbot();
+    // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
     private double clawOffset = 0;                        // Servo mid position
 
-    @Override
-    public void runOpMode()
+    @Override public void runOpMode()
     {
         double left;
         double right;
-        double max;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
