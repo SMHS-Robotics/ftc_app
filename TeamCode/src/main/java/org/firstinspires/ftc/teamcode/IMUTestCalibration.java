@@ -38,7 +38,8 @@ public class IMUTestCalibration extends LinearOpMode
     // Main logic
     //----------------------------------------------------------------------------------------------
 
-    @Override public void runOpMode()
+    @Override
+    public void runOpMode()
     {
 
         telemetry.log().setCapacity(12);
