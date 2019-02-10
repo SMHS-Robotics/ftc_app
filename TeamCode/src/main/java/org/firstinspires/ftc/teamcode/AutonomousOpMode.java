@@ -15,7 +15,11 @@ public abstract class AutonomousOpMode extends LinearOpMode
 {
     final double TURN_POWER = 1.0;
     final double DRIVE_POWER = 1.0;
+    final double KP = 0; //TODO: Replace placeholder values
+    final double KI = 0;
+    final double KD = 0;
 
+    PIDController pid = new PIDController(KP, KI, KD);
     HardwarePushbot robot = new HardwarePushbot();
     AutonomousState state;
     Orientation angles;
