@@ -33,7 +33,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
     // could also use HardwarePushbotMatrix class.
     private double clawOffset = 0;                        // Servo mid position
 
-    @Override public void runOpMode()
+    @Override
+    public void runOpMode()
     {
         double left;
         double right;

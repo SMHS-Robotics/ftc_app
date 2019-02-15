@@ -71,7 +71,8 @@ public class IMUTest extends LinearOpMode
     // Main logic
     //----------------------------------------------------------------------------------------------
 
-    @Override public void runOpMode()
+    @Override
+    public void runOpMode()
     {
 
         // Set up the parameters with which we will use our IMU. Note that integration
