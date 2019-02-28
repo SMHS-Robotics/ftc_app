@@ -31,21 +31,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwarePushbot
+public class HardwareDummybot
 {
-    public static final double MID_SERVO = 0.5;
-    public static final double ARM_UP_POWER = 0.45;
-    public static final double ARM_DOWN_POWER = -0.45;
 
     /* Public OpMode members. */
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
-    public DcMotor arm = null;
-    public Servo leftClaw = null;
-    public Servo rightClaw = null;
-    public Servo flagDrop = null;
-    public DistanceSensor distanceSensor = null;
-    public ColorSensor colorSensor = null;
     public BNO055IMU imu = null;
 
     /* local OpMode members. */
@@ -54,11 +45,9 @@ public class HardwarePushbot
 
     //Parameters for REV Expansion Hub
     double globalAngle = 0;
-    Acceleration accel;
-    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot()
+    public HardwareDummybot()
     {
 
     }
@@ -72,7 +61,6 @@ public class HardwarePushbot
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        arm = hwMap.get(DcMotor.class, "arm");
         // Set to REVERSE if using AndyMark motors
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         // Set to FORWARD if using AndyMark motors
@@ -93,26 +81,11 @@ public class HardwarePushbot
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        arm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Define and initialize ALL installed servos.
-        leftClaw = hwMap.get(Servo.class, "left_claw");
-        rightClaw = hwMap.get(Servo.class, "right_claw");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
-
-        flagDrop = hwMap.get(Servo.class, "flag_dropper");
-        flagDrop.setPosition(0);
-
-        //TODO: Touch sensor maybe??
-        distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
-        colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
 
         //Set Up Angle
         resetAngle();

@@ -19,13 +19,20 @@ public abstract class AutonomousOpMode extends LinearOpMode
     final double KI = 0;
     final double KD = 0;
 
-    PIDController pid = new PIDController(KP, KI, KD);
+    PIDController pidRotate = new PIDController(KP, KI, KD);
     HardwarePushbot robot = new HardwarePushbot();
     AutonomousState state;
     Orientation angles;
 
     protected void rotate(double degrees, double power)
     {
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.20, power);
+        pidRotate.setTolerance(2);
+        pidRotate.enable();
+        
         final double TURN_TOLERANCE = 10;
 
         power = Range.clip(power, -1, 1);
@@ -81,7 +88,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
             sleep(25);
         }
 
-        telemetry.addLine().addData("RYAN!", " I'VE HIT LINE 204");
+        //telemetry.addLine().addData("RYAN!", " I'VE HIT LINE 204");
 
         robot.leftDrive.setPower(0);
         robot.rightDrive.setPower(0);
@@ -99,7 +106,6 @@ public abstract class AutonomousOpMode extends LinearOpMode
 
     protected void composeTelemetry()
     {
-
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
         telemetry.addAction(() ->
