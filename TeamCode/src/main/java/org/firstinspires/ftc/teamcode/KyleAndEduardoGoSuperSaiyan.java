@@ -62,13 +62,12 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
 
-            // Use gamepad left & right Bumpers to open and close the claw
-            if (gamepad1.b)
+            if (gamepad2.b)
             {
                 clawOffset += CLAW_SPEED;
             }
 
-            else if (gamepad1.x)
+            else if (gamepad2.x)
             {
                 clawOffset -= CLAW_SPEED;
             }
@@ -79,11 +78,11 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             robot.rightClaw.setPosition(HardwarePushbot.MID_SERVO - clawOffset);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
+            if (gamepad2.y)
             {
                 robot.arm.setPower(HardwarePushbot.ARM_UP_POWER);
             }
-            else if (gamepad1.a)
+            else if (gamepad2.a)
             {
                 robot.arm.setPower(HardwarePushbot.ARM_DOWN_POWER);
             }

@@ -33,8 +33,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -42,30 +40,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
 @Autonomous(name = "Ryan-kun Uwu", group = "Sensor")
-// Comment this out to add to the opmode list
+
 public class IMUTest extends LinearOpMode
 {
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
-
-    // The IMU sensor object
-    BNO055IMU imu;
     // State used for updating telemetry
     Orientation angles;
     Acceleration accel;
-    Position location;
-    Velocity speed;
-    DistanceSensor distanceSensor = null;
-    //Left and Right wheel DC Motors
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+
+    // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+    PIDController pidRotate = new PIDController(.005, 0, 0);
+
+    HardwareDummybot robot = new HardwareDummybot();
 
     //----------------------------------------------------------------------------------------------
     // Main logic
@@ -87,15 +76,8 @@ public class IMUTest extends LinearOpMode
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-
-        //Retrieve and initialize left and right motors
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        telemetry.addLine().addData("caption", robot.imu == null);
+        telemetry.update();
 
         // Set up our telemetry dashboard
         composeTelemetry();
@@ -103,19 +85,15 @@ public class IMUTest extends LinearOpMode
         // Wait until we're told to go
         waitForStart();
 
-        // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        if (opModeIsActive())
+        {
+            rotate(90, 0.7);
+        }
 
         // Loop and update the dashboard
         while (opModeIsActive())
         {
             telemetry.update();
-
-            //            final double initAngle = angles.firstAngle;
-            //            while (Math.abs(angles.firstAngle - initAngle) < 90)
-            //            {
-            //                leftDrive.setPower(1);
-            //            }
         }
     }
 
@@ -133,15 +111,13 @@ public class IMUTest extends LinearOpMode
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
+            angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX,
                     AngleUnit.DEGREES);
-            accel = imu.getLinearAcceleration();
-            speed = imu.getVelocity();
-            location = imu.getPosition();
+            accel = robot.imu.getLinearAcceleration();
         });
 
-        telemetry.addLine().addData("status", () -> imu.getSystemStatus().toShortString())
-                 .addData("calib", () -> imu.getCalibrationStatus().toString());
+        telemetry.addLine().addData("status", () -> robot.imu.getSystemStatus().toShortString())
+                 .addData("calib", () -> robot.imu.getCalibrationStatus().toString());
 
         //heading is firstAngle
         telemetry.addLine()
@@ -153,19 +129,6 @@ public class IMUTest extends LinearOpMode
                  .addData("xAccel", () -> String.format(Locale.getDefault(), "%.3f", accel.xAccel))
                  .addData("yAccel", () -> String.format(Locale.getDefault(), "%.3f", accel.yAccel))
                  .addData("zAccel", () -> String.format(Locale.getDefault(), "%.3f", accel.zAccel));
-
-        telemetry.addLine().addData("vel", () -> speed.toString())
-                 .addData("xVel", () -> String.format(Locale.getDefault(), "%.3f", speed.xVeloc))
-                 .addData("yVel", () -> String.format(Locale.getDefault(), "%.3f", speed.yVeloc))
-                 .addData("zVel", () -> String.format(Locale.getDefault(), "%.3f", speed.zVeloc));
-
-        telemetry.addLine().addData("pos", () -> speed.toString())
-                 .addData("xPos", () -> String.format(Locale.getDefault(), "%.3f", location.x))
-                 .addData("yPos", () -> String.format(Locale.getDefault(), "%.3f", location.y))
-                 .addData("zPos", () -> String.format(Locale.getDefault(), "%.3f", location.z));
-
-
-        telemetry.addLine().addData("dist", () -> distanceSensor.getDistance(DistanceUnit.CM));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -180,6 +143,80 @@ public class IMUTest extends LinearOpMode
     String formatDegrees(double degrees)
     {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * Author: https://stemrobotics.cs.pdx.edu/node/9156
+     *
+     * @param degrees Degrees to turn, + is left - is right
+     * @param power   supplied to both motors between -1.0 and 1.0
+     */
+    private void rotate(int degrees, double power)
+    {
+        // restart imu angle tracking.
+        robot.resetAngle();
+
+        // start pid controller. PID controller will monitor the turn angle with respect to the
+        // target angle and reduce power as we approach the target angle with a minimum of 20%.
+        // This is to prevent the robots momentum from overshooting the turn after we turn off the
+        // power. The PID controller reports onTarget() = true when the difference between turn
+        // angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
+        // The minimum power is determined by testing and must enough to prevent motor stall and
+        // complete the turn. Note: if the gap between the starting power and the stall (minimum)
+        // power is small, overshoot may still occur. Overshoot is dependant on the motor and
+        // gearing configuration, starting power, weight of the robot and the on target tolerance.
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.20, power);
+        pidRotate.setTolerance(2);
+        pidRotate.enable();
+
+        // robot.getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && robot.getAngle() == 0)
+            {
+                robot.leftDrive.setPower(-power);
+                robot.rightDrive.setPower(power);
+                sleep(100);
+            }
+
+            do
+            {
+                power = pidRotate.performPID(robot.getAngle()); // power will be - on right turn.
+                robot.leftDrive.setPower(power);
+                robot.rightDrive.setPower(-power);
+            }
+            while (opModeIsActive() && !pidRotate.onTarget());
+        }
+        else    // left turn.
+        {
+            do
+            {
+                power = pidRotate.performPID(robot.getAngle()); // power will be + on left turn.
+                robot.leftDrive.setPower(power);
+                robot.rightDrive.setPower(-power);
+            }
+            while (opModeIsActive() && !pidRotate.onTarget());
+        }
+
+        // turn the motors off.
+        robot.rightDrive.setPower(0);
+        robot.leftDrive.setPower(0);
+
+        // wait for rotation to stop.
+        sleep(500);
+
+        // reset angle tracking on new heading.
+        robot.resetAngle();
     }
 
 }
