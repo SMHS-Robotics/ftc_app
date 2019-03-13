@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "kyle copy pasted", group = "Pushbot")
+@TeleOp(name = "DAMN SON", group = "Pushbot")
 
 public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
 {
@@ -72,10 +72,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
                 clawOffset -= CLAW_SPEED;
             }
 
-            // Move both servos to new position.  Assume servos are mirror image of each other.
-            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            robot.leftClaw.setPosition(HardwarePushbot.MID_SERVO + clawOffset);
-            robot.rightClaw.setPosition(HardwarePushbot.MID_SERVO - clawOffset);
+
 
             // Use gamepad buttons to move arm up (Y) and down (A)
             if (gamepad2.y)
