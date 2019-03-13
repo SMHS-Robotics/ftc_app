@@ -1,10 +1,12 @@
 //TO DO: better documentation and commenting lol xd kill me
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.hardware.HardwarePushbot;
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -13,7 +15,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * This particular OpMode executes a POV Game style Teleop for a PushBot
  * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It raises and lowers the claw using the Gamepad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
  * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
@@ -28,7 +30,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
     private final double CLAW_SPEED = 0.02;                     // sets rate to move servo
     private final double CLAW_OPEN_MAX = -0.12;
     private final double CLAW_OPEN_MIN = -0.5;
-    /* Declare OpMode members. */ HardwarePushbot robot = new HardwarePushbot();
+    /* Declare OpMode members. */
+    HardwarePushbot robot = new HardwarePushbot();
     // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
     private double clawOffset = 0;                        // Servo mid position

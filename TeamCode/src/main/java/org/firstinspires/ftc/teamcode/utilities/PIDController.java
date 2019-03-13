@@ -1,6 +1,6 @@
 // PID controller courtesy of Peter Tischler, with modifications. http://stemrobotics.cs.pdx.edu/node/7268
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.utilities;
 
 public class PIDController
 {
