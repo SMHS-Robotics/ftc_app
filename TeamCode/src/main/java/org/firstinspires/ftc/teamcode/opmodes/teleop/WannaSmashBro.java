@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareDummybot;
 
-@TeleOp(name = "CummyBoy", group = "Pushbot")
+@TeleOp(name = "CummyBoy", group = "Dummybot")
 
 public class WannaSmashBro extends LinearOpMode
 {
@@ -21,24 +19,19 @@ public class WannaSmashBro extends LinearOpMode
         double left;
         double right;
 
-        boolean forward = true;
-
         robot.init(hardwareMap);
 
         waitForStart();
 
-        while(opModeIsActive())
+        while (opModeIsActive())
         {
-            if (gamepad1.right_bumper)
-            {
-                forward = !forward;
-            }
 
-            left = Range.clip(gamepad1.left_trigger, 0, 1);
-            right = Range.clip(gamepad1.right_trigger, 0, 1);
+            left = Range.clip(-gamepad1.left_stick_y, -1, 1);
+            right = Range.clip(-gamepad1.right_stick_y, -1, 1);
 
-            left = forward ? Math.abs(left) : -Math.abs(left);
-            right = forward ? Math.abs(right) : -Math.abs(right);
+            telemetry.addData("left", left);
+            telemetry.addData("right", right);
+            telemetry.update();
 
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);

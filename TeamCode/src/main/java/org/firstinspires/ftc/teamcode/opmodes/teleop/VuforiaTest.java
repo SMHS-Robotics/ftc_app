@@ -79,7 +79,7 @@ import java.util.List;
  * is explained below.
  */
 
-@TeleOp(name = "Concept: Vuforia Navigation", group = "Concept")
+@TeleOp(name = "Vuforia Test 1234567890", group = "Concept")
 public class VuforiaTest extends LinearOpMode
 {
 
@@ -103,10 +103,8 @@ public class VuforiaTest extends LinearOpMode
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
-        int cameraMonitorViewId = hardwareMap.appContext.getResources()
-                                                        .getIdentifier("cameraMonitorViewId", "id",
-                                                                hardwareMap.appContext
-                                                                        .getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(
                 cameraMonitorViewId);
 
@@ -147,7 +145,7 @@ public class VuforiaTest extends LinearOpMode
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("WomenWhoTech");
         VuforiaTrackable redTarget = stonesAndChips.get(0);
         redTarget.setName("RedTarget");  // Stones
 
