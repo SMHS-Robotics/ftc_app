@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -38,6 +38,9 @@ public class HardwareDummybot
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
     public BNO055IMU imu = null;
+
+    //static final members
+    public static final String TAG = "DUMMYBOT";
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
