@@ -21,14 +21,24 @@ public class WannaSmashBro extends LinearOpMode
         double left;
         double right;
 
+        boolean forward = true;
+
         robot.init(hardwareMap);
 
         waitForStart();
 
         while(opModeIsActive())
         {
-            left = Range.clip(gamepad1.left_stick_y, -1, 1);
-            right = Range.clip(gamepad1.right_stick_y, -1, 1);
+            if (gamepad1.right_bumper)
+            {
+                forward = !forward;
+            }
+
+            left = Range.clip(gamepad1.left_trigger, 0, 1);
+            right = Range.clip(gamepad1.right_trigger, 0, 1);
+
+            left = forward ? Math.abs(left) : -Math.abs(left);
+            right = forward ? Math.abs(right) : -Math.abs(right);
 
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
