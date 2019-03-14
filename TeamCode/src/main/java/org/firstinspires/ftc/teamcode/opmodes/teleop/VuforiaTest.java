@@ -79,7 +79,7 @@ import java.util.List;
  * is explained below.
  */
 
-@TeleOp(name = "Concept: Vuforia Navigation", group = "Concept")
+@TeleOp(name = "Vuforia Navigation", group = "Concept")
 public class VuforiaTest extends LinearOpMode
 {
 
