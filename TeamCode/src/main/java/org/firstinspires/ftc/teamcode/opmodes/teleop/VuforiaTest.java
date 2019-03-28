@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.R;
  * This OpMode was written for the VuforiaDemo Basics video. This demonstrates basic principles of
  * using VuforiaDemo in FTC.
  */
-@TeleOp(name = "( ͡° ͜ʖ ͡°) ")
+@TeleOp(name = "( ͡° ͜ʖ ͡°)")
 public class VuforiaTest extends LinearOpMode
 {
     //ULTRA SECRET KEY PLEASE DO NOT STEAL
@@ -31,9 +31,8 @@ public class VuforiaTest extends LinearOpMode
     private VuforiaLocalizer vuforiaLocalizer;
     private VuforiaLocalizer.Parameters parameters;
     private VuforiaTrackables visionTargets;
-    private VuforiaTrackable brainTarget;
-    private VuforiaTrackable gwcTarget;
-    private VuforiaTrackableDefaultListener listener;
+    private VuforiaTrackable foodBankTarget;
+    private VuforiaTrackableDefaultListener foodBankListener;
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
 
@@ -56,8 +55,13 @@ public class VuforiaTest extends LinearOpMode
 
         while (opModeIsActive())
         {
-            // Ask the listener for the latest information on where the robot is
-            OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+            // Ask the foodBankListener for the latest information on where the robot is
+            OpenGLMatrix latestLocation = null;
+
+            if (foodBankListener.isVisible())
+            {
+                latestLocation = foodBankListener.getUpdatedRobotLocation();
+            }
 
             // The listener will sometimes return null, so we check for that to prevent errors
             if (latestLocation != null)
@@ -65,17 +69,17 @@ public class VuforiaTest extends LinearOpMode
                 lastKnownLocation = latestLocation;
             }
 
-            float[] coordinates = lastKnownLocation.getTranslation().getData();
-
+//            float[] coordinates = lastKnownLocation.getTranslation().getData();
+//
 //            robotX = coordinates[0];
 //            robotY = coordinates[1];
 //            robotAngle = Orientation
 //                    .getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ,
 //                            AngleUnit.DEGREES).thirdAngle;
 
-            // Send information about whether the brainTarget is visible, and where the robot is
-            telemetry.addData("Tracking " + brainTarget.getName(), listener.isVisible());
-            telemetry.addData("Tracking " + gwcTarget.getName(), listener.isVisible());
+            // Send information about whether the foodBankTarget is visible, and where the robot is
+            telemetry.addData("Tracking " + foodBankTarget.getName(),
+                    foodBankListener.isVisible());
             telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
 
             // Send telemetry and idle to let hardware catch up
@@ -99,21 +103,17 @@ public class VuforiaTest extends LinearOpMode
         visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("WomenWhoTech");
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 2);
 
-        // Setup the brainTarget to be tracked
-        brainTarget = visionTargets.get(1); // 1 corresponds to the glowy brain
-        brainTarget.setName("Glowy Brain");
-        brainTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        // Setup the foodBankTarget to be tracked
+        foodBankTarget = visionTargets.get(0); // 0 corresponds to the food bank target
+        foodBankTarget.setName("Second Harvest Food Bank");
+        foodBankTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
 
-        //Setup the Girls Who Code target
-        gwcTarget = visionTargets.get(0);
-        gwcTarget.setName("Girls Who Code");
-        gwcTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
-        // Setup listener and inform it of phone information
-        listener = (VuforiaTrackableDefaultListener) brainTarget.getListener();
-        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+        // Setup foodBankListener and inform it of phone information
+        foodBankListener = (VuforiaTrackableDefaultListener) foodBankTarget.getListener();
+        foodBankListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
     }
 
     // Creates a matrix for determining the locations and orientations of objects
