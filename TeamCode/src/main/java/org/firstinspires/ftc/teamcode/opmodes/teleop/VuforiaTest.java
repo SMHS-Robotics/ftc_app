@@ -16,7 +16,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
-
+import org.firstinspires.ftc.teamcode.utilities.VuforiaPicture;
+//TODO WE ADDED A BUNCH OF VUFORIA STUFF TO HARDWAREDUMMYBOT.JAVA PLEASE WRITE SOMETHING TO TEST IT
 /*
  * This OpMode was written for the VuforiaDemo Basics video. This demonstrates basic principles of
  * using VuforiaDemo in FTC.
@@ -104,7 +105,9 @@ public class VuforiaTest extends LinearOpMode
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 2);
 
         // Setup the foodBankTarget to be tracked
-        foodBankTarget = visionTargets.get(0); // 0 corresponds to the food bank target
+        foodBankTarget = visionTargets.get(VuforiaPicture.FOOD_BANK.ordinal()); // 0 corresponds to the
+        // food bank
+        // target
         foodBankTarget.setName("Second Harvest Food Bank");
         foodBankTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
 

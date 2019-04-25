@@ -2,17 +2,16 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "LEFT SIDE", group = "asdofijefj")
+@Autonomous(name = "RIGHT SID", group = "asdofijefj")
 
-public class AutonomousWithSensorsLeft extends AutonomousOpMode
+public class AutoWithSensorsRightPushbot extends AutoOpModePushbot
 {
-    final double ANGLE_TO_DEPOT = 78.3469043;
-    final double ANGLE_TO_CRATER = 170.2361801;
+    final double ANGLE_TO_DEPOT = -58.3469043;
+    final double ANGLE_TO_CRATER = -190.2361801;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-
         autonomousStart();
 
         waitForStart();
@@ -88,5 +87,4 @@ public class AutonomousWithSensorsLeft extends AutonomousOpMode
         driveUntilImpact(DRIVE_POWER);
         state = AutonomousState.END;
     }
-
 }

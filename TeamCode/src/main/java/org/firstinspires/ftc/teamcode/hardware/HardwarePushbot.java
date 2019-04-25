@@ -31,7 +31,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwarePushbot
+public class HardwarePushbot implements HardwareRobot
 {
     public static final double MID_SERVO = 0.5;
     public static final double ARM_UP_POWER = 0.45;

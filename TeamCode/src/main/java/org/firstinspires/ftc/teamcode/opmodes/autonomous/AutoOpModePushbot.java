@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utilities.PIDController;
 
 import java.util.Locale;
 
-public abstract class AutonomousOpMode extends LinearOpMode
+public abstract class AutoOpModePushbot extends AutoOpMode
 {
     final double TURN_POWER = 1.0;
     final double DRIVE_POWER = 1.0;
@@ -26,7 +26,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
     AutonomousState state;
     Orientation angles;
 
-    protected void rotate(double degrees, double power)
+    public void rotate(double degrees, double power)
     {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
@@ -106,7 +106,7 @@ public abstract class AutonomousOpMode extends LinearOpMode
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-    protected void composeTelemetry()
+    public void composeTelemetry()
     {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
