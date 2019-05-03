@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.utilities.AutonomousState;
+
 @Autonomous(name = "RIGHT SID", group = "asdofijefj")
 
 public class AutoWithSensorsRightPushbot extends AutoOpModePushbot

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -50,6 +51,7 @@ public class HardwareDummybot implements HardwareRobot
     /* Public OpMode members. */
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
+    public DcMotor arm = null;
     public BNO055IMU imu = null;
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -193,6 +195,9 @@ public class HardwareDummybot implements HardwareRobot
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        arm = hwMap.get(DcMotor.class, "arm");
+
+        arm.setDirection(DcMotor.Direction.FORWARD);
         // Set to REVERSE if using AndyMark motors
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         // Set to FORWARD if using AndyMark motors
@@ -213,12 +218,14 @@ public class HardwareDummybot implements HardwareRobot
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
+        arm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Set Up Angle
         resetAngle();
 

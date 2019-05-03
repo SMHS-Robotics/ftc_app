@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmodes.autonomous;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import android.util.Log;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,10 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.HardwareDummybot;
 import org.firstinspires.ftc.teamcode.utilities.PIDController;
+import org.firstinspires.ftc.teamcode.utilities.VuforiaPicture;
 
 import java.util.Locale;
 
-@Autonomous(name = "Ryan-kun Uwu", group = "Test")
+@TeleOp(name = "Ryan-kun Uwu", group = "Test")
 
 public class IMUTest extends LinearOpMode
 {
@@ -41,19 +43,33 @@ public class IMUTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        Log.i("FRICK", "time: " + time.toString());
+        Log.i("RIChard", "time: " + time.toString());
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, VuforiaPicture.FOOD_BANK);
 
         // Set up our telemetry dashboard
         composeTelemetry();
         // Wait until we're told to go
         waitForStart();
 
-        if (opModeIsActive())
+        while (opModeIsActive())
         {
             telemetry.update();
-            rotate(90, 0.75);
+
+            robot.arm.setPower(Range.clip(gamepad1.left_stick_y, -1, 1));
+
+            if (robot.isVisible(VuforiaPicture.FOOD_BANK))
+            {
+                robot.leftDrive.setPower(1.0);
+                robot.rightDrive.setPower(1.0);
+            }
+            else
+            {
+                robot.leftDrive.setPower(1.0);
+                robot.rightDrive.setPower(-1.0);
+            }
+            telemetry.addData("see food bank?", robot.isVisible(VuforiaPicture.FOOD_BANK));
+            telemetry.addData("gamepad 1 left stick y", gamepad1.left_stick_y);
         }
 
     }
